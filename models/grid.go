@@ -2,15 +2,13 @@ package models
 
 import "fmt"
 
-type Cell bool
-
 type Grid struct{
 	Nx, Ny int
 	Cells [][]Cell
 }
 
 type Coord struct {
-	x, y int
+	X, Y int
 }
 
 func NewGrid(Nx, Ny int, aliveCellCoord ...Coord) Grid {
@@ -25,7 +23,7 @@ func NewGrid(Nx, Ny int, aliveCellCoord ...Coord) Grid {
 	}
 
 	for _, c := range aliveCellCoord {
-		g.Cells[c.x][c.y] = true
+		g.Cells[c.X][c.Y] = true
 	}
 
 	return g
@@ -49,6 +47,48 @@ func (g Grid) CountAlive() (count int) {
 	return count
 }
 
-func (g *Grid) Iter() {
+func (g Grid) Iter() Grid{
+	var alive []Coord
+	for i := range g.Cells {
+		for j, c := range g.Cells[i] {
+			count := g.aliveNeighbours(i, j)
+			if c.birthRule(count) || c.comfortRule(count) {
+				alive = append(alive, Coord{i, j})
+			}
+		}
+	}
 
+	return NewGrid(g.Nx, g.Ny, alive...)
+}
+
+func (g Grid) aliveNeighbours(x, y int) (count int) {
+	for i := max(0, x-1); i<= min(x+1, g.Nx-1); i++ {
+		for j := max(0, y-1); j<= min(y+1, g.Ny-1); j++ {
+			if g.Cells[i][j] {
+				count ++
+			}
+		}
+	}
+
+	//retrieve self
+	if g.Cells[x][y] {
+		count --
+	}
+
+	return count
+}
+
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
