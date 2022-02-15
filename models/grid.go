@@ -2,9 +2,9 @@ package models
 
 import "fmt"
 
-type Grid struct{
+type Grid struct {
 	Nx, Ny int
-	Cells [][]Cell
+	Cells  [][]Cell
 }
 
 type Coord struct {
@@ -13,8 +13,8 @@ type Coord struct {
 
 func NewGrid(Nx, Ny int, aliveCellCoord ...Coord) Grid {
 	g := Grid{
-		Nx:    Nx,
-		Ny:    Ny,
+		Nx: Nx,
+		Ny: Ny,
 	}
 
 	g.Cells = make([][]Cell, Nx)
@@ -47,7 +47,7 @@ func (g Grid) CountAlive() (count int) {
 	return count
 }
 
-func (g Grid) Iter() Grid{
+func (g Grid) Iter() Grid {
 	var alive []Coord
 	for i := range g.Cells {
 		for j, c := range g.Cells[i] {
@@ -62,33 +62,18 @@ func (g Grid) Iter() Grid{
 }
 
 func (g Grid) aliveNeighbours(x, y int) (count int) {
-	for i := max(0, x-1); i<= min(x+1, g.Nx-1); i++ {
-		for j := max(0, y-1); j<= min(y+1, g.Ny-1); j++ {
+	for i := max(0, x-1); i <= min(x+1, g.Nx-1); i++ {
+		for j := max(0, y-1); j <= min(y+1, g.Ny-1); j++ {
 			if g.Cells[i][j] {
-				count ++
+				count++
 			}
 		}
 	}
 
 	//retrieve self
 	if g.Cells[x][y] {
-		count --
+		count--
 	}
 
 	return count
-}
-
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }

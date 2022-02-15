@@ -14,5 +14,5 @@ func (c Cell) birthRule(aliveNeighbours int) bool {
 
 // a cell stays alive if it has exactly 2 neighbours (has to be alive in the first place)
 func (c Cell) comfortRule(aliveNeighbours int) bool {
-	return bool(c) && aliveNeighbours==2
+	return bool(c) && aliveNeighbours == 2
 }
